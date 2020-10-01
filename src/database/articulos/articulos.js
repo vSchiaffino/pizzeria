@@ -1,12 +1,13 @@
 const pool = require('../database')
+const { articulosDb } = require('../databaseHandler');
 
 exports.getArticulos = async function(){
-    return await pool.query('SELECT * FROM Articulos');
+    return await pool.query(articulosDb.getAll());
 }
 
 exports.GetArticuloById = async (id) => {
     try {
-        let arts = await pool.query(`SELECT * FROM Articulos WHERE id = ${id}`);
+        let arts = await pool.query(articulosDb.getByFilter({id: id}));
         if(arts.length >= 1)
         {
             return arts[0];
@@ -21,8 +22,7 @@ exports.GetArticuloById = async (id) => {
 }
 
 exports.newArticulo = async (a) => {
-    let cmd = `INSERT INTO Articulos(idcategoria, nombre, descripcion, precio, referencia)
-               VALUES(${a.idcategoria}, '${a.nombre}', '${a.descripcion}', ${a.precio}, '${a.referencia}')`
+    let cmd = articulosDb.addRow(a)
     try
     {
         let res = await pool.query(cmd);
@@ -38,7 +38,7 @@ exports.newArticulo = async (a) => {
 exports.delArticulo = async (id) => {
     try
     {
-        let res = await pool.query(`DELETE FROM articulos WHERE id = ${id}`);
+        let res = await pool.query(articulosDb.deleteRow(id));
         return {ok: true};
     }
     catch(err)
@@ -51,14 +51,7 @@ exports.modArticulo = async(id, a) => {
     if (!a.idcategoria && !a.nombre && !a.descripcion && !a.precio && !a.referencia){
         return {ok: false, error: 'No changes given'}
     }
-    let cmd = `UPDATE Articulos SET `
-    if (a.idcategoria) cmd += `idcategoria = ${a.idcategoria},`;
-    if (a.nombre) cmd += ` nombre = '${a.nombre}',`;
-    if (a.descripcion) cmd += `descripcion = '${a.descripcion}',`;
-    if (a.precio) cmd += `precio = ${a.precio},`;
-    if (a.referencia) cmd += `referencia = '${a.referencia}'`;
-    if(cmd[cmd.length - 1] == ',') cmd = cmd.substr(0, cmd.length - 2);
-    cmd += ` WHERE id = ${id}`;
+    let cmd = articulosDb.updateRow(id, a)
     try
     {
         let res = await pool.query(cmd);
