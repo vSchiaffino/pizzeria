@@ -1,4 +1,4 @@
-const {Database, dbTypes, filterOperators} = require('../../sql-handler')
+const {Database, dbTypes, filterOperators} = require('../../query-maker')
 
 // articulos
 exports.articulosDb = new Database("articulos", {
