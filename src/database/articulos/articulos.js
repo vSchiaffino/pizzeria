@@ -63,3 +63,15 @@ exports.modArticulo = async(id, a) => {
         return {ok: false, error: err};
     }
 }
+
+exports.GetArticulosById = async (articulos = []) => {
+    let art = []
+    articulos.forEach(t => {
+        const a = `id = ${t}`;
+        if (!art.includes(a)){
+            art.push(a);
+        }
+    })
+    const cmd = `SELECT * FROM articulos WHERE ${art.join(" OR ")}`
+    return await pool.query(cmd);
+}

@@ -51,7 +51,7 @@ exports.newUser = async(u) => {
 
 exports.checkToken = async (token, id) => {
     const user = await getUserById(id);
-    return user.token === token
+    return user.token == token ? user : false;
 }
 
 exports.modUser = async(u, id) => {

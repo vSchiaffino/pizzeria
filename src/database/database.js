@@ -5,7 +5,8 @@ const pool = mysql.createPool({
     host: 'localhost',
     user: 'root',
     password: 'root',
-    database: 'pizzeria'
+    database: 'pizzeria',
+    multipleStatements: true
 });
 
 pool.query = promisify(pool.query);
