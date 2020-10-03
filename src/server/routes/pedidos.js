@@ -1,6 +1,7 @@
-const { checkToken } = require('../../database/users/users')
-const { GetArticulosById } = require('../../database/articulos/articulos')
-const { addCabecera, addDetalles } = require('../../database/pedidos/pedidos')
+const { checkToken } = require('../../database/users/users');
+const checkAuthorization = require('../checkAuthorization');
+const { GetArticulosById } = require('../../database/articulos/articulos');
+const { addCabecera, addDetalles, getCabeceras } = require('../../database/pedidos/pedidos');
 
 module.exports = (app) => {
     // newPedido
@@ -55,5 +56,10 @@ module.exports = (app) => {
 
     });
 
+    app.get('/pedidos', async(req, res) => {
+        if(checkAuthorization(req, res)){
+            return res.json(await getCabeceras());
+        }
+    });
     return app;
 }

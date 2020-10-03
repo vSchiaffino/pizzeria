@@ -32,3 +32,11 @@ const getNewIdCabecera = async () => {
     let row = rows[0];
     return row.maxid == undefined ? 1 : row.maxid + 1;
 }
+
+exports.getCabeceras = async () =>  {
+    const rows = await pool.query(pedidosCabeceraDb.getAll());
+    for (let i = 0; i < rows.length; i++) {
+        rows[i].detalles = await pool.query(pedidosDetalleDb.getByFilter({idcabecera: rows[i].id}));
+    }
+    return rows
+}
