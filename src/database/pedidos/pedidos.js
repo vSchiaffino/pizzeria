@@ -40,3 +40,9 @@ exports.getCabeceras = async () =>  {
     }
     return rows
 }
+
+exports.getCabecera = async (idcabecera) => {
+    const row = await pool.query(pedidosCabeceraDb.getByFilter({id: idcabecera}));
+    row[0].detalles = await pool.query(pedidosDetalleDb.getByFilter({idcabecera: idcabecera}));
+    return row[0];
+}

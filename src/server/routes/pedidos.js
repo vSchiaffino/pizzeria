@@ -1,7 +1,7 @@
 const { checkToken } = require('../../database/users/users');
 const checkAuthorization = require('../checkAuthorization');
 const { GetArticulosById } = require('../../database/articulos/articulos');
-const { addCabecera, addDetalles, getCabeceras } = require('../../database/pedidos/pedidos');
+const { addCabecera, addDetalles, getCabeceras, getCabecera } = require('../../database/pedidos/pedidos');
 
 module.exports = (app) => {
     // newPedido
@@ -61,5 +61,11 @@ module.exports = (app) => {
             return res.json(await getCabeceras());
         }
     });
+
+    app.get('/pedidos/:id', async (req, res) => {
+        if(checkAuthorization(req, res)){
+            return res.json(await getCabecera(req.params.id));
+        }
+    })
     return app;
 }
